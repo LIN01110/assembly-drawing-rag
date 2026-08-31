@@ -1,0 +1,11 @@
+# 项目2 P0 检测评估依赖（.conda / Python 3.11 / Windows）
+# torch 需从 PyTorch 官方 cu128 索引安装（RTX 5060 Blackwell sm_120 必须 cu128+）：
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128
+# 其余走清华 TUNA：
+#   pip install -r requirements-p0.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+torch>=2.7
+ultralytics>=8.3
+opencv-python>=4.10
+numpy>=1.26,<3
+PyYAML>=6.0
+tqdm>=4.66

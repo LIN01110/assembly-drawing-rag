@@ -1,0 +1,6 @@
+train: mydata/images1/
+val: mydata/images1/
+train_labels: mydata/labels1/
+val_labels: mydata/labels1/
+nc: 5
+names: ['table', 'tech_req', 'row', 'col', 'cell']

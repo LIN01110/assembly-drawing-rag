@@ -1,0 +1,9 @@
+*.pt
+*.onnx
+__pycache__/
+.conda/
+dataset*/
+runs/
+*.sqlite
+debug_preprocessed/
+*.log

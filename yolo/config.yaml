@@ -1,0 +1,13 @@
+# config/api_config.yaml
+models:
+  yolo_trained: "runs/train/table_detection22/weights/best.pt"
+  yolo_default: "yolov8n.pt"
+
+ocr:
+  model_dir: "models"
+  use_gpu: true
+
+output:
+  txt_format: true
+  json_format: true
+  image_format: false

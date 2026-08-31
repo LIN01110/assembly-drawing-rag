@@ -1,0 +1,9 @@
+model: yolov8n.pt        # 预训练权重
+epochs: 100
+batch: 16
+imgsz: 640
+data: data.yaml
+project: runs
+name: detect_train
+exist_ok: true
+device: 'cpu'                

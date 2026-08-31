@@ -1,0 +1,34 @@
+# ocr_fixed.yaml
+train: ocr_data/images/train
+val: ocr_data/images/train
+
+# 类别定义
+nc: 2
+names: ['table', 'tech_req']
+
+# 超参数配置（针对小数据集优化）
+# 运行命令: yolo train data=ocr_fixed.yaml model=yolov8n.pt epochs=150 batch=4 imgsz=1280
+
+# 数据增强（强化版 - 30张图片需要大量增强）
+augment:
+  hsv_h: 0.02
+  hsv_s: 0.7        # 增强饱和度
+  hsv_v: 0.7        # 增强亮度
+  degrees: 5.0      # 旋转±5度
+  translate: 0.15   # 平移15%
+  scale: 0.3        # 缩放30%
+  shear: 3.0        # 错切±3度
+  flipud: 0.0       # 不上下翻转
+  fliplr: 0.0       # 不左右翻转
+  mosaic: 0.5       # 50%概率Mosaic
+  mixup: 0.2        # 20%概率Mixup
+  copy_paste: 0.2   # 20%概率Copy-Paste
+
+# 训练参数
+imgsz: 1280
+batch: 4
+epochs: 150
+patience: 30
+optimizer: Adam
+lr0: 0.001
+lrf: 0.01

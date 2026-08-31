@@ -1,0 +1,163 @@
+# 路径配置
+paths:
+  base_dir: "C:/Users/alien/PycharmProjects/yolo项目路径"
+  raw_images: "mydata/images1"
+  raw_labels: "mydata/labels1"
+  yolo_model: "models/yolo11n.pt"  # 你的YOLO模型
+  output_regions: "output/regions"
+  ocr_results: "output/ocr_results"# config/info_extraction.yaml - 第二步信息提取专用配置
+# ===================================================
+
+# 项目基础路径（根据你的实际路径修改）
+paths:
+  base_dir: "C:/Users/alien/PycharmProjects/yolo项目路径"
+  # 输入图像路径（可以是第一步的输出或原始图像）
+  input_images: "mydata/images1"
+  # 第一步YOLO模型的输出路径（如果有分割好的小图）
+  cropped_regions: "output/cropped_regions"  # 如果第一步输出在这里
+  # 输出路径
+  output_regions: "output/regions"           # 存放YOLO检测到的区域
+  ocr_results: "output/ocr_results"          # 存放OCR识别结果
+  visualizations: "output/visualizations"    # 存放可视化结果
+
+# YOLO模型配置
+yolo:
+  model_path: "runs/train/table_detection22/weights/best.pt"  # 使用第一步训练好的模型
+  conf_threshold: 0.5      # 置信度阈值
+  iou_threshold: 0.5       # IoU阈值
+  classes:                 # 需要检测的两个类别
+    - "tech_req"           # 技术要求区域
+    - "table"              # 表格区域
+  padding: 5               # 区域裁剪时的边距
+
+# OCR配置
+ocr:
+  use_gpu: true            # 是否使用GPU
+  use_angle_cls: true      # 是否使用角度分类器
+  lang: "ch"               # 语言：中文
+  det_db_thresh: 0.3       # 文本检测阈值
+  det_db_box_thresh: 0.5   # 文本框阈值
+  drop_score: 0.5          # 文本识别置信度阈值
+  version: "PP-OCRv4"      # PaddleOCR版本
+
+# 表格字段定义（根据你的图纸调整）
+table_fields:
+  # 每个字段的定义
+  - name: "物体"
+    keywords: ["盒体", "物体", "名称"]
+    required: false
+    default_value: "无"
+
+  - name: "编号"
+    keywords: ["编号", "图号", "件号"]
+    required: false
+    default_value: "无"
+    patterns: ["[A-Za-z0-9\-]+"]  # 编号的正则表达式
+
+  - name: "镀涂"
+    keywords: ["镀涂", "涂层", "表面处理"]
+    required: false
+    default_value: "无"
+
+  - name: "比例"
+    keywords: ["比例", "缩放"]
+    required: false
+    default_value: "无"
+    patterns: ["[0-9]+[:：][0-9]+"]  # 如 1:2
+
+  - name: "质量"
+    keywords: ["质量", "重量"]
+    required: false
+    default_value: "无"
+
+  - name: "张数"
+    keywords: ["张数", "页数", "共张"]
+    required: false
+    default_value: "无"
+    patterns: ["[0-9]+/[0-9]+"]  # 如 1/3
+
+  - name: "设计"
+    keywords: ["设计"]
+    required: false
+    default_value: "无"
+
+  - name: "审核"
+    keywords: ["审核"]
+    required: false
+    default_value: "无"
+
+  - name: "工艺"
+    keywords: ["工艺"]
+    required: false
+    default_value: "无"
+
+  - name: "标准化"
+    keywords: ["标准化"]
+    required: false
+    default_value: "无"
+
+  - name: "批准"
+    keywords: ["批准", "审定"]
+    required: false
+    default_value: "无"
+
+# 技术要求解析配置
+technical_requirements:
+  prefix: "技术要求："          # 输出前缀
+  number_pattern: "[0-9]+[\.．、]"  # 检测序号的模式
+  line_separator: " "         # 行分隔符
+  max_lines: 20               # 最多处理行数
+
+# 输出格式配置
+output:
+  save_regions: true          # 是否保存检测到的区域图像
+  save_visualization: true    # 是否保存可视化结果
+  save_json: true             # 是否保存JSON格式结果
+  save_txt: true              # 是否保存TXT格式结果
+  json_indent: 2              # JSON缩进空格数
+  txt_separator: " | "        # TXT字段分隔符
+
+# 系统配置
+system:
+  max_workers: 4              # 最大工作线程数（如果使用多线程）
+  log_level: "INFO"           # 日志级别
+  log_file: "logs/info_extraction.log"  # 日志文件路径
+
+# YOLO配置
+yolo:
+  conf_threshold: 0.5
+  iou_threshold: 0.5
+  classes: ["tech_req", "table"]  # 两个类别
+
+# OCR配置
+ocr:
+  use_angle_cls: true
+  lang: "ch"
+  use_gpu: true
+  det_db_thresh: 0.3
+  det_db_box_thresh: 0.5
+
+# 表格解析规则
+table_fields:
+  - name: "物体"
+    keywords: ["盒体", "物体", "名称"]
+  - name: "编号"
+    keywords: ["编号", "图号", "件号"]
+  - name: "镀涂"
+    keywords: ["镀涂", "涂层", "表面处理"]
+  - name: "比例"
+    keywords: ["比例", "缩放"]
+  - name: "质量"
+    keywords: ["质量", "重量"]
+  - name: "张数"
+    keywords: ["张数", "页数", "共张"]
+  - name: "设计"
+    keywords: ["设计"]
+  - name: "审核"
+    keywords: ["审核"]
+  - name: "工艺"
+    keywords: ["工艺"]
+  - name: "标准化"
+    keywords: ["标准化"]
+  - name: "批准"
+    keywords: ["批准", "审定"]

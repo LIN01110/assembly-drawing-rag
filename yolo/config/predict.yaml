@@ -1,0 +1,23 @@
+augment: false
+conf: 0.5
+exist_ok: true
+iou: 0.45
+max_det: 20
+model: C:\Users\alien\PycharmProjects\yolo\runs\detect_train\weights\best.pt
+name: predict
+output_format: PNG
+overwrite: true
+postprocess:
+  auto_contrast: false
+  auto_levels: false
+  brightness: 1.0
+  contrast: 1.0
+  padding: 0
+  sharpness: 1.0
+preprocess:
+  grayscale: false
+  normalize: false
+  resize: null
+project: runs
+save_crop: true
+source: pic_batch

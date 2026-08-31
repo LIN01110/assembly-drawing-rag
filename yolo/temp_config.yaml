@@ -1,0 +1,8 @@
+# data.yaml for 2-class detection
+path: ./dataset_2class
+train: images/train
+val: images/val
+
+# 类别信息
+nc: 2
+names: ['table', 'tech_req']

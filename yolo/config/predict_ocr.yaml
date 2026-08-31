@@ -1,0 +1,37 @@
+# OCR文字提取配置
+# 使用 PaddleOCR 进行文字识别
+
+# PaddleOCR 配置
+paddleocr:
+  enabled: true
+  languages: ['ch_sim', 'en']  # 识别语言：简体中文和英文
+  gpu: true                    # 是否使用GPU（如果有的话）
+  confidence_threshold: 0.5    # 置信度阈值
+  drop_score: 0.5              # 文本过滤阈值
+  save_crops: true             # 是否保存文本区域图像
+  save_json: true              # 是否保存JSON结果
+
+# YOLO 配置（EasyOCR不可用时使用）
+augment: false
+conf: 0.5
+exist_ok: true
+iou: 0.45
+max_det: 50
+model: yolov8n.pt
+name: ocr_extract
+output_format: PNG
+overwrite: true
+postprocess:
+  auto_contrast: true
+  auto_levels: true
+  brightness: 1.2
+  contrast: 1.2
+  padding: 5
+  sharpness: 1.5
+preprocess:
+  grayscale: true
+  normalize: true
+  resize: null
+project: runs
+save_crop: true
+source: pic_batch
