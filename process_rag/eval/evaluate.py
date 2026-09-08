@@ -63,26 +63,34 @@ def main() -> None:
     ap.add_argument("--no-llm", action="store_true", help="全程模板降级，75 次调用零 API（可复现）")
     ap.add_argument("--llm-hybrid-only", action="store_true",
                     help="仅 hybrid 臂用 LLM，其余两臂 --no-llm（混合模式）")
+    ap.add_argument("--cases-file", default=str(CASES_PATH), help="用例文件（默认 eval/cases.json）")
+    ap.add_argument("--arms", default="cbr,vector,hybrid", help="逗号分隔的消融臂")
+    ap.add_argument("--out", default=str(RESULTS_DIR / "process_rag_eval.json"))
     args = ap.parse_args()
     if args.no_llm:
         os.environ["PROCESS_RAG_NO_LLM"] = "1"
     db.init_db()
-    cases = json.loads(CASES_PATH.read_text(encoding="utf-8"))
+    cases = json.loads(Path(args.cases_file).read_text(encoding="utf-8"))
     print(f"评测用例数: {len(cases)}")
 
+    arms = tuple(args.arms.split(","))
+    verbose = len(cases) <= 100
     records: list[dict] = []
-    for case in cases:
-        for method in ("cbr", "vector", "hybrid"):
+    for idx, case in enumerate(cases):
+        for method in arms:
             r = run_case(case, method)
             records.append(r)
-            print(f"[{case['id']}|{method}] 派工={'✓' if r['dispatch_ok'] else '✗'} "
-                  f"合规={'✓' if r['compliance_ok'] else '✗'} 记忆库={'✓' if r['recall_hit'] else '✗'}")
+            if verbose:
+                print(f"[{case['id']}|{method}] 派工={'✓' if r['dispatch_ok'] else '✗'} "
+                      f"合规={'✓' if r['compliance_ok'] else '✗'} 记忆库={'✓' if r['recall_hit'] else '✗'}")
+        if not verbose and (idx + 1) % 250 == 0:
+            print(f"  进度 {idx + 1}/{len(cases)}")
 
     def rate(rs, key):
         return round(sum(1 for r in rs if r[key]) / len(rs), 4) if rs else 0.0
 
     summary = {"cases": len(cases)}
-    for method in ("cbr", "vector", "hybrid"):
+    for method in arms:
         rs = [r for r in records if r["method"] == method]
         summary[method] = {
             "dispatch_acc": rate(rs, "dispatch_ok"),
@@ -93,7 +101,7 @@ def main() -> None:
     summary["archived_count"] = sum(1 for r in records if r["archived"])
 
     RESULTS_DIR.mkdir(exist_ok=True)
-    (RESULTS_DIR / "process_rag_eval.json").write_text(
+    Path(args.out).write_text(
         json.dumps({"summary": summary, "records": records}, ensure_ascii=False, indent=2),
         encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))

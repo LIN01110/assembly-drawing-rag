@@ -3,7 +3,9 @@
 __pycache__/
 .conda/
 dataset*/
+mydata_aug/
 runs/
 *.sqlite
 debug_preprocessed/
 *.log
+.pytest_cache/
