@@ -23,10 +23,12 @@
 ## 运行
 
 ```bash
-python src/db.py                 # 初始化 SQLite（12机床/8材料/6人员）
-python run_demo.py               # 交互式审批 demo（内置示例零件）
-python run_demo.py --auto-approve  # 自动批准
-python eval/evaluate.py --no-llm   # 25 用例 × 3 记忆库臂，零 API 可复现
+python src/db.py                    # 初始化 SQLite（12机床/8材料/6人员）
+python run_demo.py                  # 交互式审批 demo（内置示例零件）
+python run_demo.py --auto-approve   # 自动批准
+python eval/gen_cases.py --n 2500   # 合成用例生成（seed=42 可复现）
+python eval/evaluate.py --no-llm    # 默认 2500 合成用例 × 3 记忆库臂，零 API 可复现
+# 快速小规模验证：python eval/evaluate.py --no-llm --cases-file eval/cases.json  # 25 人工用例
 ```
 
 ## 评测结果（2026-08-30 第二轮：R8 外键校验 + 隔离区上线后，25 用例 ×3 臂，--no-llm 可复现）
@@ -65,4 +67,4 @@ python eval/evaluate.py --no-llm   # 25 用例 × 3 记忆库臂，零 API 可�
 - `src/db.py` schema + 模拟数据；`src/tools.py` 只读查询工具 + 派工规则
 - `src/memory.py` 记忆库/GB 库检索；`src/compliance.py` R1-R7 合规规则 + 置信度标红
 - `src/rbac.py` 三角色权限 + 审批留痕；`src/graph.py` LangGraph 状态机（interrupt 人工在环）
-- `eval/cases.json` 25 评测用例；`results/process_rag_eval.json` 评测输出
+- `eval/cases.json` 25 人工精选评测用例；`eval/cases_synth.json` 2500 合成用例（`gen_cases.py` seed=42 生成，evaluate.py 默认使用）；`results/process_rag_eval.json` 评测输出
